@@ -1,0 +1,125 @@
+[core]
+    name=<Author>
+    editor=vim
+    pager=less -FRX
+    excludesfile = ~/.gitignore
+[http]
+[color]
+	ui = true
+    status=auto
+    branch=auto
+    diff=auto
+     interactive = auto
+[color "status"]
+    added=yellow
+    changed=green
+    untracked=cyan
+[color "branch"]
+    current=yellow reverse
+    local=yellow
+    remote=green
+[color "diff"]
+    meta=yellow bold
+    old=red bold
+    new=green bold
+[merge]
+    log=true
+
+[alias]
+#    comparemaster =  "!comparemaster() { git diff \"`git rev-parse HEAD`\" master -- . }; comparemaster"
+	tree = log --color --graph --pretty=format:'%C(201)%h%Creset -%C(reverse yellow)%d%Creset %s %Cgreen(%cr) %C(202)<%an>%Creset' --abbrev-commit
+    ls = log --pretty=format:"%C(161)%h%Cred%d\\ %Creset%s%C(202)\\ [%cn]" --decorate
+    ll = log --pretty=format:"%C(201)%h%C(red)%d\\ %Creset%C(154)%s%C(202)\\ [%cn]" --decorate --numstat
+    list=log --date=local --date=short --pretty=format:"%C(201)%h%C(red)%d\\ %Creset%C(154)%s\\ %C(38){%ad}\\ %C(202)\\ [%cn] " --decorate --author='Sivaswami Jeganathan'
+    l=log --date=local --date=short --pretty=format:"%C(201)%h%C(red)%d\\ %Creset%C(154)%s\\ %C(38){%ad}\\ %C(202)\\ [%cn] " --decorate --numstat --author='Sivaswami Jeganathan'
+    dellog= log  --date=local --date=short --pretty=format:"%C(201)%h%C(red)%d\\ %Creset%C(154)%s\\ %C(38){%ad}\\ %C(202)\\ [%cn] " --decorate --numstat --diff-filter=D
+#     alias gwip='git unstage .; git stash' # ?
+
+#    alias gsavesnapshot='gwip; git stash pop' # ?
+    watch = "!loglive() { while true; do clear ; echo CURRENT FOLDER=$PWD; git --no-pager log --abbrev-commit --decorate --graph --all --color --date=short -10 --pretty=format:\"%C(yellow) %h%x20%C(white)%cd%C(green)%d%C(reset)%x20%s%x20%C(bold)(%an)%Creset\" ; echo ; echo ; git status ; sleep 15; done }; loglive"
+    getmaster='pull origin master'
+    last=!git log -n 1 --pretty=format:%H
+    lastcommit=log  --pretty=format:"%C(161)%h%Cred%d\\ %Creset%s%C(202)\\ [%cn]" --decorate --numstat -1
+    rootfolder=rev-parse --show-toplevel
+    root=rev-parse --show-toplevel
+     #diff = diff --word-diff
+    branches = branch -ra -vv
+#    diffbranch="!diffbranch() { git difftool  -y -t mymeld  master..$1 $(git rev-parse --show-toplevel)/plugins/bugdb-plugin ; }; diffbranch "
+    diffbranch="!diffbranch() { git meld $(git rev-parse --abbrev-ref HEAD)..$1 ; }; diffbranch "
+    diffmaster="!diffmaster() { git meld master..$1;  }; diffmaster "
+    masterdiff="!masterdiff() { echo "COMMITS THAT ARE NOT IN MASTER " ; git log $(git bname) ^master --oneline --graph ; }; masterdiff "
+    delbranch = "!f() { [[ -n $@ ]] && git checkout \"$@\" && git unpublish && git checkout master && git branch -D \"$@\" ; }; f"
+    delremotebranch="push origin --delete <<branchname>>"
+    recreate = "!f() { [[ -n $@ ]] && git checkout \"$@\" && git unpublish && git checkout master && git branch -D \"$@\" && git checkout -b \"$@\" && git publish; }; f"
+    url="!url() { git config remote.origin.url ; }; url"
+    alias = "!git config -l | grep alias | cut -c 7-"
+    publish = "!git push -u origin $(git branch-name)"
+    unpublish = "!git push origin :$(git branch-name)"
+    amend="commit --amend --reuse-message=HEAD"
+    unpushed = !GIT_CURRENT_BRANCH=$(git name-rev --name-only HEAD) && git log origin/$GIT_CURRENT_BRANCH..$GIT_CURRENT_BRANCH --oneline
+    vimdiff= "difftool -y -t vimdiff -R"
+    meld=!bin/git-meld.pl
+    #meld="difftool -y -t mymeld "
+    c = commit --verbose
+    ca = commit -a --verbose
+    cm = commit -m
+    cam = commit -a -m
+    s=status -s
+    dt=difftool
+    #diffmaster=cherry -v master
+    ds=diff --stat
+    dc=diff --cached
+    co=checkout
+    cob=checkout -b
+    createbranch=checkout -b
+   contributors=shortlog -s
+    today="!today() { git ll --since=yesterday; }; today"
+    snapshot = "!snapshot() { COMMENT=Siva:Wip:$(date  +%m%d%y):$(basename $PWD); if [ \"$*\" ]; then COMMENT=\"$*\"; fi; git add -A; git commit -v -m \"$COMMENT\"; git --no-pager tree -3;  }; snapshot"
+    days = "!days() { git log --pretty=format:%cd --date=short | uniq; }; days"
+    allbranch = "!branches() { for name in \"$@\"; do git branch $name; done; }; branches"
+    b='branch -ra -vv'
+    branch-name = "!git rev-parse --abbrev-ref HEAD"
+    bname= "!git rev-parse --abbrev-ref HEAD"
+    publish = "!git push -u origin $(git branch-name)"
+    code-review = difftool origin/master...
+    unstaged="ls-files --others --exclude-standard"
+    delete-merged-branches = "!git co master && git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+    lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold 220)%h%C(reset) - %C(239)(%ar)%C(reset) %C(116)%s%C(reset) %C(176)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    lg2 = log --date=local --graph --abbrev-commit --decorate --format=format:'%C(bold 220)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+     stat = "!stat() { echo -n Number of revisions:; git log --oneline | wc -l; echo -n Number of developers:; git shortlog -s | wc -l; echo -n Number of days:; git days | wc -l; echo -n The working directory:; du -h -s --exclude=.git; echo -n The git directory:; du -h -s .git; echo -n Number of files in the working dir:; git ls-files | wc -l; }; stat"
+#    rbranch="!rbranch() { bash -c \'for k in $(git branch|sed s/^..//);do echo -e $(git log -1 --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset\" \"$k\") \\t\"$k\";done|sort\' }; rbranch"
+     # list branches sorted by last modified
+      b = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
+     #
+     #         # list aliases
+#    la = "!git config -l | grep alias | cut -c 7-"
+#    gg=log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+[user]
+	name = <Author>
+	email = <Email>
+[credential]
+	helper = store --timeout=3600
+[merge]
+    summary=true
+[diff]
+#	tool=mymeld
+    conflictstyle = diff3
+#    external= ~/.git-diff.sh $LOCAL $REMOTE
+[merge]
+#        tool = vimdiff
+#	external = meld
+        conflictstyle = diff3
+[mergetool]
+    cmd=~/bin/linux/meld/bin/meld  --diff $BASE $LOCAL --diff $BASE $REMOTE --diff $LOCAL $MERGED $REMOTE
+        prompt = false
+[difftool]
+     prompt = false#
+#	cmd =~/bin/linux/meld/bin/meld  $LOCAL $REMOTE
+#[difftool "colordiff"]
+#    cmd="~/.git-diff.sh"
+
+[mergetool "meld"]
+	cmd = ~/bin/linux/meld/bin/meld  --diff $BASE $LOCAL --diff $BASE $REMOTE --diff $LOCAL $MERGED $REMOTE
+	trustExitCode = false
+[difftool "mymeld"]
+    cmd =~/.git-diff.sh $LOCAL $REMOTE $BASE
