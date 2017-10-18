@@ -1,6 +1,6 @@
 #==========================================================================
 # File            : tinydir
-# Description     :
+# Description     : Shortens the folder name with environment variables. For example try : export JAVA__HOME=<somedir>; cd $JAVA_HOME; tinydir $PWD
 # @(#)
 #/bin/env python
 #
