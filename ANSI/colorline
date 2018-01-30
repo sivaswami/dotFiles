@@ -1,0 +1,20 @@
+#! /bin/bash
+#==========================================================================
+# File            : $SBIN/colorline
+# Description     :
+# @(#) Draws color line
+#
+# Revision History:
+#
+#   29 Jul 2016 - sijegana
+#      Initial Version.
+#==========================================================================
+function colorline1() {
+ #perl -slane 'print "\033[38;5;$COLORm$2\033[m-"x $MYCOL;' -- -COLOR=$1 -MYCOL=$2
+ echo -en "\033[38;5;$1m"
+ perl -se ' print "-" x $MYCOL; ' -- -MYCOL=$2
+ echo  -en  "\033[m"
+# perl -slane 'print $ENV{COLUMNS}; '
+ }
+MYCOLOR=${1:-238}
+colorline1 $MYCOLOR $(tput cols)

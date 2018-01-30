@@ -1,0 +1,15 @@
+#! /bin/bash
+#==========================================================================
+# File            : weather
+# Description     : 
+# @(#) Get Weather from AccuWeather
+#
+# Revision History: 
+#
+#   25 Feb 2017 - sijegana
+#      Initial Version.
+#==========================================================================
+. $FARM/proxy
+LOCCOD=${1:-08854}
+curl -s http://rss.accuweather.com/rss/liveweather_rss.asp\?metric\=0\&locCode\=$LOCCOD \ | sed -n '/Currently:/ s/.*: \(.*\): \([0-9]*\)\([CF]\).*/\2°\3, \1/p'
+

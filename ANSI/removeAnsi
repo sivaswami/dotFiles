@@ -1,0 +1,12 @@
+#! /bin/bash
+#==========================================================================
+# File            : removeAnsi
+# Description     : 
+# @(#) Remove Ansi Color codes in a File
+#
+# Revision History: 
+#
+#   19 May 2016 - sijegana
+#      Initial Version.
+#==========================================================================
+sed -ri "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" $1

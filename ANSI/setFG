@@ -1,0 +1,14 @@
+#! /bin/bash
+#==========================================================================
+# File            : setFG
+# Description     : 
+# @(#) Set the Foreground Color in 256 colors
+#
+# Revision History: 
+#
+#   30 Apr 2015 - sijegana
+#      Initial Version.
+#==========================================================================
+color=$1
+shift;
+echo -en "\033[38;5;${color}m$*\033[m"

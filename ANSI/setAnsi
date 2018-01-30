@@ -1,0 +1,18 @@
+#!/bin/bash +x
+#==========================================================================
+# File            : setAnsi
+# Description     : 
+# @(#) Set the Ansi Color in 256 colors
+#
+# Revision History: 
+#
+#   30 Apr 2015 - sijegana
+#      Initial Version.
+#==========================================================================
+FG=$1
+BG=$2
+shift; shift; 
+DATA=$*
+#echo -en "\033[38;5;${FG};48;5;${BG}m$DATA\033[m"
+printf "\033[38;5;${FG};48;5;${BG}m$DATA\033[m"
+

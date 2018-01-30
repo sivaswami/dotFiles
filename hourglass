@@ -1,0 +1,21 @@
+#! /bin/bash
+#==========================================================================
+# File            : hourglass
+# Description     : 
+# @(#) Hourglass display for n seconds
+#
+# Revision History: 
+#
+#   19 Jun 2017 - sijegana
+#      Initial Version.
+#==========================================================================
+ trap 'tput cnorm' 0 1 2 15 RETURN;
+s=$(($SECONDS +$1));
+ (tput civis;while (($SECONDS<$s));
+ do 
+ for f in '|' '\' '-' '/'; do 
+   echo -n "$f";
+   sleep .2s;
+   echo -n $'\b';
+ done;
+ done;);

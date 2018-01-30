@@ -1,0 +1,12 @@
+#! /bin/bash
+#==========================================================================
+# File            : yesterday
+# Description     : 
+# @(#) print yesterday date
+#
+# Revision History: 
+#
+#   05 Aug 2017 - sijegana
+#      Initial Version.
+#==========================================================================
+date -d "yesterday 13:00" '+%Y-%m-%d'

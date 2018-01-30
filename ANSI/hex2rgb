@@ -1,0 +1,21 @@
+#! /usr/bin/env python
+#==========================================================================
+# File            : hex2rgb
+# Description     :
+# @(#) HEX to RGB
+#
+# Revision History:
+#
+#   25 Oct 2017 - sijegana
+#      Initial Version.
+#==========================================================================
+import sys
+
+def hex_to_rgb(h):
+    #if( h[0] == "#" ):
+    #  h = h.lstrip('#')
+    lh = len(h)
+    return tuple( int(h[i:i+lh//3], 16) for i in range(0, lh, lh//3) )
+
+
+print(sys.argv[1] + " => " + str(hex_to_rgb (sys.argv[1])))

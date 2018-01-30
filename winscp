@@ -1,0 +1,15 @@
+#! /bin/bash
+#==========================================================================
+# File            : winscp
+# Description     : 
+# @(#) Starts winscp dialog from Kitty session
+#
+# Revision History: 
+#
+#   06 Feb 2017 - sijegana
+#      Initial Version.
+#==========================================================================
+fun_winscp() { 
+LAUNCH_FOLDER=${1:-${PWD}}
+echo -ne "\033];__ws:${LAUNCH_FOLDER}\007" | iconv -f UTF-8 -t CP1252; }
+fun_winscp $*

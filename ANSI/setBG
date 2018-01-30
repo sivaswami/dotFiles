@@ -1,0 +1,12 @@
+#! /bin/bash
+#==========================================================================
+# File            : setrBG
+# Description     : 
+# @(#) Set the Background Color in 256 colors
+#
+# Revision History: 
+#
+#   30 Apr 2015 - sijegana
+#      Initial Version.
+#==========================================================================
+echo -en "\033[48;5;$1m$2\033[m"

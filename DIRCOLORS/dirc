@@ -1,0 +1,3 @@
+# eval $(dircolors -b /net/slc03qwj/scratch/sijegana/bin/.dircolors.monokai)
+ eval $(dircolors -b $SBIN/DIRCOLORS/dircolors.default)
+

@@ -1,0 +1,17 @@
+#!/bin/env bash
+#==========================================================================
+# File        : classpath
+# Description : Prints classpath entries in  line
+#
+#
+# Revision History:
+#   10 Sept 2012 - Sivaswami Jeganathan
+#      Initial Version.
+#==========================================================================
+if [ "$#" -eq 0 ]; then
+    echo -e "${CLASSPATH//:/\n}"
+    exit 0
+ fi
+ if [[ $OSNAME -eq 'AIX' ]]; then
+     ps ewww "$1" | tr ' ' '\n' | grep = | sort | grep -E -i '^CLASSPATH=' | tr ':' '\n'
+fi

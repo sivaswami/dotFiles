@@ -1,0 +1,12 @@
+#! /bin/bash
+#==========================================================================
+# File            : prettyxml
+# Description     : 
+# @(#) Pretty Print XML file
+#
+# Revision History: 
+#
+#   22 May 2017 - sijegana
+#      Initial Version.
+#==========================================================================
+ python -c 'import sys;import xml.dom.minidom;s=sys.stdin.read();print xml.dom.minidom.parseString(s).toprettyxml()' 
