@@ -1,0 +1,518 @@
+#!bin/env bash
+#==========================================================================
+# File        : se
+# Description : Set Environment Script for sijegana user
+#
+#
+# Revision History:
+#   10 Sept 2012 - Sivaswami Jeganathan
+#   02 Feb  2017 - Siva
+#==========================================================================
+#set -euo pipefail
+#set -e
+# Set -e - immediately exit if command has non zero exit
+# -u reference only defined variables
+#set -E
+#trap 'echo Failed on line: $LINENO at command: $BASH_COMMAND && exit $?' ERR
+#trap 'echo Failed on line: $LINENO at command: $BASH_COMMAND ' ERR
+export HOST_MACHINE=<MACHINENAME>
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
+#echo "$DIR"
+if [[ $DIR == *"/net"* ]]; then
+  STOP=/net/$HOST_MACHINE/scratch/sijegana/STOP
+elif [[ $DIR == *"/home/sijegana"* ]]; then
+  STOP=/net/$HOST_MACHINE/scratch/sijegana/STOP
+else
+  STOP=/net/$HOSTNAME/scratch/sijegana/STOP
+fi
+
+#--------------------------------------------------------------
+## Validation API's
+##-------------------------------------------------------------
+exist () { type "$1" >/dev/null 2>&1 ; }
+checkdir () { [ -d "$1"  ] && return 0 || return 1; }
+checkexe () { [ -x "$(command -v $1)"  ] && return 0 || return 1; }
+checkgit () {  cd "$1" ; git rev-parse 2>/dev/null; return $?; }
+checkLinuxOnly () { [ $(file "$1" | grep ELF) ] && return 1 || return 0;  }
+declare -f exist > /dev/null
+declare -f checkgit > /dev/null
+osname=$( [[ $(uname -s) == 'SunOS' ]] && uname -p || uname -s )
+
+### UNSET Values
+unset PROMPT_COMMAND
+unset PS1
+unset SSH_ASKPASS
+if [ -z ${TMUX_PANE+x}  ]; then export FZF_TMUX=1; else unset FZF_TMUX; fi
+
+IFS=$'\n\t'
+### BASH environment
+shopt -s autocd
+shopt -s cmdhist
+shopt -s cdspell
+shopt -s dirspell
+shopt -s nocaseglob
+shopt -s cdable_vars
+shopt -s histappend
+set -o ignoreeof
+set -o vi
+set -o noclobber
+set -o errtrace 
+
+#### Environment Variables Settings
+export SBIN="${STOP}"/SBIN
+export BOOKS="${STOP}"/BOOKS/BOOKS # Contains Books, Tutorials, etc
+export boot="${SOFT}"/BOOT/
+export BUGS="${STOP}"/BUGS  # Contains Bugs, PMR reproducers
+export CODE="${STOP}"/SCODE # contains My code
+export EXINIT="source /home/sijegana/.exrc"
+export FARM="${STOP}"/FARM  # Contains company specific Internal scripts
+export farm=$STOP//FARM
+export JAVA="${SBIN}"/java
+#export PYTHONUSERBASE="${SOFT}"/PYTHONPACKAGES
+export SOFT="${STOP}"/SOFT  # Contains Softwares
+export SQL="${SBIN}"/Oracle # oracle db scripts
+export WLS="${SBIN}"/wls
+export SOFTPATH=${SOFT}/ANACONDA/bin:${SOFT}/ECLIPSE:${SOFT}/MELD/bin:${SOFT}/SUBLIME:${SOFT}/MAVEN/bin:${SOFT}/GRADLE/bin:${SOFT}/P4MERGE/bin:${SOFT}/SCALA/bin:${SOFT}/VISUALVM/bin:${SOFT}/BOOT/bin:${SOFT}/RESTSHELL/bin:${SOFT}/NODE/bin:${SOFT}/GIT/bin:${SOFT}/RIPGREP:${SOFT}/GFLOW
+export BINPATH=$SBIN:$SBIN/java:$SBIN/ANSI:$SBIN/GIT:$SBIN/functions:${FARM}/retool/3.0.0/bin
+#export SOFT=/scratch/sijegana/SOFT
+#base64 -d  <<< "H4sIAOjHrFgAA22MwQ3AUAhC705hwpEN3H+wFvXX2pQDPJXo0fIYiV36pgUTdnxSXmQM+uhMK2tIN4I3yPOMrmHq0wi38xar3pD+fmEgxDuKWNPZKc3RekCc55+0C0dHLnFJAQAA" | gunzip
+#iecho string | gzip -cf | base64 (refer site : http://ascii.mastervb.net/)
+#export FZF_TMUX=1
+#echo "Setting History Options ..."
+export DIRSTACKSIZE=9
+export EDITOR=vim
+export HISTSIZE=10000
+export HISTIGNORE='&:ssh*:*bin/se:. bin/se:*history:mutt:[bf]g:*exit:pwd:*hostname:*cd ..:bash:zsh:*echo:cs:h:*pushd*:*popd*'
+export HISTTIMEFORMAT='%F %T '
+export HISTFILESIZE=1000000
+export HISTFILE=/scratch/$USER/.history
+export INPUTRC=${HOME}/.inputrc
+export LESS='-egIJM --tabs=4'
+export LS_COLORS="$LS_COLORS:di=00;33"
+export MYPROMPT='\n\n '
+export NMON=mndct
+export PROMPT_DIRTRIM=3
+export SCREENDIR=/tmp/.screens
+
+### Maven, Gradle Environment Variables
+export M2_HOME="${SOFT}"/MAVEN
+export MAVEN_OPTS='-Xms512m -XX:MaxPermSize=1024m -Xmx1536m'
+export MVN_HOME="${SOFT}"/MAVEN
+export GRADLE_HOME="${SOFT}"/GRADLE
+export GRADLE_USER_HOME="$(dirname "$STOP")/.gradlerepository"
+#export GRADLE_OPTS='-Dorg.gradle.daemon=true'
+export GRADLE_OPTS=' -XX:+UseG1GC -XX:MaxGCPauseMillis=1000 -Dorg.gradle.jvmargs="-Xmx1536m -XX:MaxPermSize=1024m -XX:ReservedCodeCacheSize=440m -XX:+UseCompressedOops -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" -Dorg.gradle.parallel=true -Dorg.gradle.daemon=true -Dorg.gradle.configureondemand=true
+'
+#### PYTHON Settings
+export PYTHONSTARTUP=$SBIN/pythonstartup.py
+#export PYTHONPATH=$PYTHONPATH:"${SOFT}"/PYTHONPACKAGES
+#### SPARK Settings for JUPYTER Console
+export PYSPARK_DRIVER_PYTHON="${SOFT}"/ANACONDA/bin/jupyter
+export PYSPARK_DRIVER_PYTHON_OPTS="notebook"
+
+export JDEV_USER_DIR=/scratch/sijegana/JDEV/userdir
+#1. MYDTE Setup
+#export AUTO_HOME=/usr/local/packages/aime/dte/DTE3
+#export AUTO_WORK=/scratch/$USER/work
+checkdir "/home/sivaswami" && export HOME="/home/sivaswami"
+checkdir "/home/sijegana" && export HOME="/home/sijegana"
+checkdir "/scratch/sijegana" && export SCRATCH="/scratch/sijegana"
+#mkdir -p /scratch/sijegana/work/view
+#export ADE_DEFAULT_VIEW_STORAGE_LOC=/net/$HOSTNAME/scratch/sijegana/work/view
+#export ADE_DEFAULT_TWORK_STORAGE_LOC=/net/$HOSTNAME/scratch/sijegana/work/view
+
+#--------------------------------------------------
+# ALIASES
+#--------------------------------------------------
+## 4 different dpi's - 70,96,120,196 for vnc server
+alias lsd='ls -lF --color | grep --color=never "^d"'
+alias ..='pushd ..'
+alias ...='pushd ../..'
+alias ....='pushd ../../..'
+alias .....='pushd ../../../..'
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias cdbin='pushd $SBIN'
+alias c='clear'
+alias cd..='pushd ..'
+alias cd...='pushd ../..'
+alias cd....='pushd ../../..'
+alias cds='source cds'
+#alias cd..="cd .."
+alias cls='clear'
+alias clean='\dirs -c'
+alias copy='command cp --preserve=mode,timestamps  -r -a '
+alias cp='command cp -r -a '
+alias ducks='du -cks *| sort -rn | head'
+alias dirs='dirs -l -v'
+alias display='source $SBIN/setDisplay'
+alias dte='pushd $AUTO_HOME'
+alias e='env | egrep -i "JAVA_HOME|RELEASE|WL_HOME|ANT_HOME|MW_HOME|JAVA_OPT|ANT_OPT" && checkpath $PATH && checkpath $CLASSPATH '
+alias edit='$EDITOR'
+alias g='_g(){ gradle $* --console=plain  2>&1 | tee g.out ; }; _g' #--info --debug --stacktrace
+alias gi='_g(){ gradle $* --console=plain --info 2>&1 | tee g.out ; }; _g'
+alias gd='_g(){ gradle $* --console=plain --debug -S   2>&1 | tee g.out ; }; _g'
+#alias gp='git pull'
+#alias gd='git diffcommit'
+alias grep='egrep -i'
+alias h='history'
+alias httpdump='root tcpdump -i en0 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\"'
+alias j='${JAVA_HOME}/bin/java'
+alias jhome='pushd $JAVA_HOME'
+alias lsof='lsof -P -n'
+alias listen=' lsof -P -n -i TCP -s TCP:LISTEN '
+alias ll="ls -ltrah"
+alias md='\mkdir -p'
+alias mkdir='\mkdir -p'
+alias mvn="\mvn -Dmaven.repo.local=/net/${HOST_MACHINE}/scratch/${USER}/.mvnrepository"
+alias mv='\mv -i'
+alias myscp='rsync --progress --partial --rsh="ssh -p 8322" --bwlimit=100 --ipv4'
+alias perlpath='perl -le "print foreach @INC"'
+#alias python='"${SOFT}"/ANACONDA/bin/python'
+#alias copy=cp
+alias pmap='pmap -x'
+alias proxy='$FARM/proxy'
+alias pdf=evince
+alias pdf=evince
+alias pwv='ade pwv'
+alias rm='\rm -i'
+alias rd='rm -rf'
+alias rsync='rsync -h --progress'
+alias rsync-copy="rsync -avz"
+alias rsync-move="rsync -avz --remove-source-files"
+alias rsync-update="rsync -avzu"
+alias rsync-synchronize="rsync -avzu --delete"
+alias rd='rmdir'
+alias refresh='ade refreshview -latest'
+alias tmp='pushd /tmp'
+alias s='pushd ${SCRATCH}'
+alias scratch='pushd ${SCRATCH}'
+alias scr='pushd /scratch/sijegana'
+alias scp='scp -r'
+alias ssh='ssh -o"StrictHostKeyChecking no" '
+alias sudo='root'
+alias sl=ls
+#if [ -f /usr/bin/vim -o -f /usr/local/bin/vim ]; then
+alias use='ade useview'
+alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
+alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
+alias vim='\vim -p'
+alias v='\vim -p'
+alias vi='\vim -p'
+#alias vnc='vncserver -geometry 1920x1080 -dpi 120 -ac -AlwaysShared -SecurityTypes None' # -interface $(ip) ' #-randr 1920x1080,1680x1050,1050x1680,1440x900'
+alias vnc='setvnc() { vncserver $1 -geometry 1920x1080 -dpi 144 -ac -AlwaysShared -SecurityTypes None ; }; setvnc'
+alias vncdpi='setvnc() { vncserver $1 -geometry 1920x1080 -dpi $2 -ac -AlwaysShared -SecurityTypes None ; }; setvnc'
+alias vncv='setvnc() { vncserver $1 -geometry 1080x1920 -dpi 120 -ac -AlwaysShared -SecurityTypes None ; }; setvnc'
+alias vnc89='setvnc() { vncserver $1 -geometry 1920x1080 -dpi 89 -ac -AlwaysShared -SecurityTypes None ; }; setvnc'
+## DUAL MONITOR VNC
+alias vnc2='setvnc() { vncserver $1 -geometry 3840x1080 -dpi 120 -ac -AlwaysShared -SecurityTypes None ; }; setvnc'
+#alias vnc2='vncserver -geometry 3840x1080 -dpi 120 -ac -AlwaysShared -SecurityTypes None' # -interface $(ip) ' #-randr 1920x1080,1680x1050,1050x1680,1440x900'
+alias week='date +%V'
+alias who='command who -ar -pld'
+alias x='$SBIN/extract'
+alias yum='$SBIN/root yum'
+   # alias vw='vim `which \$@`'
+#else
+ #   export EDITOR=vi
+#fi
+exist dircolors && source "$SBIN/DIRCOLORS/dirc"
+exist htop && alias top='htop'
+exist topas && alias top='topas -P'
+exist wget && alias wget='myp=http://proxy.hiyer.com:80; wget -c -e use_proxy=on -ehttps_proxy=$myp -ehttp_proxy=$myp -eftp_proxy=$myp '
+exist pmap && alias pmap='pmap -x'
+exist multitail && alias multitail='multitail -s 2 '
+exist gvim && alias gvim='gvim -p'
+exist tmux && alias tmux='tmux -2 -u'
+alias pscpu='tput rmam; ps auxwwwx| head -1; ps auxwwwx | grep -v PID | sort -nr -k 3 | head -10; tput smam'
+#alias psmem='tput rmam; ps auxwwwx | head -1 ; ps auxwwwx | grep -v PID | sort -nr -k 4 | head -10 ; tput smam'
+
+#---------------------------------------------------------------------
+# SOFTWARES
+#----------------------------------------------------------------------
+checkdir "${SOFT}"/ECLIPSE && alias eclipse='"${SOFT}"/ECLIPSE/eclipse -data /scratch/$USER/workspace -showlocation > /dev/null 2>&1  & '
+checkdir "${SOFT}"/findbugs-3.0.1 && alias findbugs='"${SOFT}"/findbugs-3.0.1/bin/findbugs'
+checkdir "${SOFT}"/PERFORCE && alias p4='$SOFT/PERFORCE/p4$osname'
+checkdir "${SOFT}"/MELD && alias meld='${SOFT}/ANACONDA3/bin/python3 "${SOFT}"/MELD/bin/meld'
+checkdir "${SOFT}"/NODE && alias npm='"${SOFT}"/NODE/bin/npm'
+checkdir "${SOFT}"/NODE && alias node='"${SOFT}"/NODE/bin/node' && export npm_config_cache="${SOFT}/TMP"
+checkdir "${SOFT}"/IDEA && alias idea='JAVA_HOME=/ade_autofs/gd29_3rdparty/nfsdo_generic/JDK8/MAIN/LINUX.X64/170717.1.8.0.141.B15/jdk8; ${SOFT}/IDEA/bin/idea.sh'
+checkdir "${SOFT}"/SUBLIME && alias sublime='"${SOFT}"/SUBLIME/sublime -a'
+checkexe "/usr/local/netbeans-*/bin/netbeans" && alias netbeans='/usr/local/netbeans-*/bin/netbeans -J-Xms1536m -J-Xmx1536m --fontsize 14 --userdir /scratch/sijegana/.netbeans --jdkhome $JAVA_HOME --cachedir /scratch/sijegana/.netbeans/cache --laf com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
+alias jbrowser='$($SBIN/java/jdk8)/bin/java -jar $SBIN/java/tools/jbrowser.jar'
+alias jca='$($SBIN/java/jdk8)/bin/java -jar $SBIN/java/tools/jca455.jar'
+alias js-beautify='"${SOFT}"/NODE/bin/js-beautify'
+#alias pipinstall='pip install --user --ignore-installed --install-option="--prefix=$PYTHONPATH"  '
+alias pip='$SOFT/ANACONDA/bin/pip install --upgrade --install-option="--prefix=$SOFT/ANACONDA/pkgs" '
+alias pip3='$SOFT/ANACONDA3/bin/pip install --upgrade --install-option="--prefix=$SOFT/ANACONDA3/pkgs" '
+alias virtualenv='LD_LIBRARY_PATH=$SOFT/ANACONDA/lib; $SOFT/ANACONDA/bin/virtualenv  -p $SOFT/ANACONDA/bin/python  --verbose '
+alias virtualenv3='LD_LIBRARY_PATH=$SOFT/ANACONDA3/lib; $SOFT/ANACONDA3/bin/virtualenv  -p $SBIN/ANACONDA3/bin/python  --verbose '
+
+function tsh(){ topen ssh "$@" ; tmux at -d; }
+export tsh
+###### COLOR CONSTANTS
+#
+## COLOR
+# Reset
+ Color_Off='\[\033[0m\]'       # Text Reset
+
+ # Regular Colors
+ Black='\[\033[0;30m\]'        # Black
+ Red='\[\033[0;31m\]'          # Red
+ Green='\[\033[0;32m\]'        # Green
+ Yellow='\[\033[0;33m\]'       # Yellow
+ Blue='\[\033[0;34m\]'         # Blue
+ Purple='\[\033[0;35m\]'       # Purple
+ Cyan='\[\033[0;36m\]'         # Cyan
+ White='\[\033[0;37m\]'        # White
+ PINK=$'\e[35;40m'
+ GREEN=$'\e[32;40m'
+ ORANGE=$'\e[33;40m'
+
+ # Bold
+ BBlack='\[\033[1;30m\]'       # Black
+ BRed='\[\033[1;31m\]'         # Red
+ BGreen='\[\033[1;32m\]'       # Green
+ BYellow='\[\033[1;33m\]'      # Yellow
+ BBlue='\[\033[1;34m\]'        # Blue
+ BPurple='\[\033[1;35m\]'      # Purple
+ BCyan='\[\033[1;36m\]'        # Cyan
+ BWhite='\[\033[1;37m\]'       # White
+
+ # Underline
+ UBlack='\[\033[4;30m\]'       # Black
+ URed='\[\033[4;31m\]'         # Red
+ UGreen='\[\033[4;32m\]'       # Green
+ UYellow='\[\033[4;33m\]'      # Yellow
+ UBlue='\[\033[4;34m\]'        # Blue
+ UPurple='\[\033[4;35m\]'      # Purple
+ UCyan='\[\033[4;36m\]'        # Cyan
+ UWhite='\[\033[4;37m\]'       # White
+
+ # Background
+ On_Black='\[\033[40m\]'       # Black
+ On_Red='\[\033[41m\]'         # Red
+ On_Green='\[\033[42m\]'       # Green
+ On_Yellow='\[\033[43m\]'      # Yellow
+ On_Blue='\[\033[44m\]'        # Blue
+ On_Purple='\[\033[45m\]'      # Purple
+ On_Cyan='\[\033[46m\]'        # Cyan
+ On_White='\[\033[47m\]'       # White
+
+ # High Intensty
+ IBlack='\[\033[0;90m\]'       # Black
+ IRed='\[\033[0;91m\]'         # Red
+ IGreen='\[\033[0;92m\]'       # Green
+ IYellow='\[\033[0;93m\]'      # Yellow
+ IBlue='\[\033[0;94m\]'        # Blue
+ IPurple='\[\033[0;95m\]'      # Purple
+ ICyan='\[\033[0;96m\]'        # Cyan
+ IWhite='\[\033[0;97m\]'       # White
+
+ # Bold High Intensty
+ BIBlack='\[\033[1;90m\]'      # Black
+ BIRed='\[\033[1;91m\]'        # Red
+ BIGreen='\[\033[1;92m\]'      # Green
+ BIYellow='\[\033[1;93m\]'     # Yellow
+ BIBlue='\[\033[1;94m\]'       # Blue
+ BIPurple='\[\033[1;95m\]'     # Purple
+ BICyan='\[\033[1;96m\]'       # Cyan
+ BIWhite='\[\033[1;97m\]'      # White
+
+ # High Intensty backgrounds
+ On_IBlack='\[\033[0;100m\]'   # Black
+ On_IRed='\[\033[0;101m\]'     # Red
+ On_IGreen='\[\033[0;102m\]'   # Green
+ On_IYellow='\[\033[0;103m\]'  # Yellow
+ On_IBlue='\[\033[0;104m\]'    # Blue
+ On_IPurple='\[\033[10;95m\]'  # Purple
+ On_ICyan='\[\033[0;106m\]'    # Cyan
+ On_IWhite='\[\033[0;107m\]'   # White
+
+ # Various variables you might want for your PS1 prompt instead
+ Time12h='\T'
+ Time12a='\@'
+ PathShort='\w'
+ PathFull='\W'
+ NewLine='\n'
+ Jobs='\j'
+
+
+#export LESS='+F +N +R -W -XM --tabs=4 -i '
+#export LESS_TERMCAP_so="$(printf 'rev\nbold\nsetaf 3\n' | tput -S)"
+#export LESS_TERMCAP_se="$(tput sgr0)"
+#mkdir -p /tmp/.screens
+#chmod 700 /tmp/.screens
+
+if [ -n "$BASH_VERSION" ]; then
+    source "$SBIN/gradle-completion.bash"
+    source "$SBIN/GIT/git-completion.bash"
+    source "$SBIN/GIT/git-prompt.sh"
+    export GIT_PS1_SHOWDIRTYSTATE=1
+    export GIT_PS1_SHOWUNTRACKEDFILES=1
+fi
+
+if [[ $LC_TYPE =~ \.[Uu][Tt][Ff]-?8 ]]; then
+    export PROMPT_COMMAND='printf "\n\n\n\n"'
+else
+    arrow="\$? ==> "
+fi
+export PS1=$'\\033[38;5;226m\xe2\x80\xa2 \\033[38;5;202m\xe2\x80\xa2 \\033[38;5;88m\xe2\x80\xa2 '"$Color_Off"
+export PS2=$PS1
+
+
+#osname=`uname -s`
+#----------------------------------------------------------------------------------
+# LINUX X64 ENVIRONMENT
+#----------------------------------------------------------------------------------
+if [[ "$osname" == "Linux" ]]; then
+             export LD_LIBRARY_PATH=$SBIN/linux:.
+            export LANG='en_US.UTF-8'
+            export LC_TYPE="en_US.UTF-8"
+            export JAVA_HOME=$($SBIN/java/jdk8)
+            export TERM='xterm-256color'
+            export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+            export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+            export FZF_DEFAULT_OPTS="--reverse --inline-info --height 40%"
+            source "${SOFT}/FZF/shell/key-bindings.bash"
+            bind -x '"\C-p": vim $(fzf);'
+            #bind '"\C-g": "git details\n"'
+            bind '"\C-y": "gw\n"'
+            [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+            alias diff='colordiff'
+            alias du='du -sh'
+            alias g++="g++ -pedantic -O3 -std=c++0x -Wall -Wextra -Wcast-qual -Wwrite-strings -Wno-missing-field-initializers -Wnon-virtual-dtor -Weffc++ -Wold-style-cast -Woverloaded-virtual"
+            alias monitor=' dstat -cldnypmgs --tcp -D total --noupdate '
+            alias tree='LESS=-RX; tree | less'
+            alias ping='ping -c 5 '
+            alias l='ls -1sh -Sr'
+            alias ls='ls --color=auto -F'
+            alias lsdot='ls -lAd .*'
+            alias git='$SOFT/GIT/bin/git'
+            exist pygmentize && alias pcat="pygmentize -f terminal256 -O style=native -g"
+            exist pygmentize || alias pcat="cat -ns "
+        #    export PS1="$IBlack$Time12h$Color_Off$arrow"
+            #PS1="$Color_Off$arrow"
+        #-----------------------------------------------------------------------------
+        # Setup fzf
+        # ----------------------------------------------------------------------------
+            if [[ ! "$PATH" == *"${SOFT}"/FZF/bin* ]]; then
+                export PATH=$PATH:"$PATH:${SOFT}/FZF/bin"
+            fi
+            for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
+                alias "$method"="lwp-request -m '$method'"
+            done
+
+            # Auto-completion
+            # ---------------
+            [[ $- == *i* ]] && source "${SOFT}/FZF/shell/completion.bash" 2> /dev/null
+
+            # Key bindings
+            # ------------
+                complete -o default -o nospace -F _git g
+                complete -d cd pushd rmdir;
+                complete -v set unset;
+#----------------------------------------------------------------------------------
+# HPIA 64 ENVIRONMENT
+#----------------------------------------------------------------------------------
+elif [[ "$osname" == "HP-UX" ]]; then
+    export LC_ALL=C
+    export JAVA_HOME='/ade_autofs/ade_ports/JDK8_MAIN_HPUX.IA64.rdd/111210.1.7.0.0.0.B02/jdk8'
+    alias git='${SOFT}/JGIT/jgit'
+elif [[ "$osname" == "sparc" || "$osname" == "i386" ]]; then
+    alias free='$SBIN/sunos/free'
+    export JAVA_HOME="$(${SBIN}/java/jdk8)"
+#    export TERM=dtterm
+    #export TERM=xterm-color
+    #alias ls='ls --color=auto'
+    if [ -d "/usr/gnu/bin" ]; then
+       alias ls='/usr/gnu/bin/ls --color=auto -F '
+       alias df='/usr/gnu/bin/df'
+       alias grep='/usr/gnu/bin/grep -nH --color'
+       alias find='/usr/gnu/bin/find'
+     fi
+
+    OSPATH=/usr/gnu/bin:/usr/ucb:"$SBIN"/sunos:/usr/X11/bin:/usr/openwin/bin:/opt/csw/bin:/usr/dtrace/DTT/Bin
+    alias ps="/usr/ucb/ps"
+    alias git='"${SOFT}"/JGIT/jgit'
+elif [[ "$osname" == "AIX" ]]; then
+    alias git='"${SOFT}"/JGIT/jgit'
+    alias dump='dump -X64'
+    alias truss="truss -u'*'"
+    alias nm='nm -X64'
+    alias diff='/usr/local/bin/diff'
+    alias gfind='/usr/local/remote/packages/gnufind/4.1/gnufind'
+    alias pwdx='procwdx -F '
+    alias ls='/usr/bin/dir --color -F'
+    export TERMINFO=/usr/share/lib/terminfo
+    alias xterm=/usr/lpp/X11/bin/xterm
+    alias xrdb=/usr/lpp/X11/bin/xrdb
+    OSPATH=/opt/freeware/bin
+    export TERM=xterm-256color
+    alias timex='timex -s'
+    export JAVA_HOME=$("$SBIN"/java/jdk8)
+    alias vmstat="vmstat -h -Iwt 1"
+    export JV=ibm17000
+else
+    export JAVA_HOME=$("$SBIN"/java/jdk8)
+fi
+
+#### HOME & SCRATCH
+test -d ${HOME} || (mkdir ${HOME} && cp ${HOME}/../.exrc ${HOME})
+test -d ${SCRATCH} || (mkdir ${SCRATCH} && mkdir -p ${SCRATCH}/work/view)
+alias work='pushd ${SCRATCH}/work'
+
+export JDK15HOME=$JAVA_HOME
+#### PATH SETUP
+#oexport PS1='\u@\h:\W> '
+#export PROMPT_COMMAND='history -a ; echo -e  "\n\n[$(uname -s)]-\033[1;97m[\033[1;96m$USER@$(hostname)\033[1;97m]:\033[1;93m$($SBIN/shortdir $PWD)" '
+#export RPROMPT='setFG 218 [$(uname -s)] - ;setFG 172 [$($SBIN/ip)] - ; setFG 165 - NY:$(date +"%l:%M %p ") -;  setFG 75 - CA:$(TZ=America/Los_Angeles date +"%l:%M %p ") -;  setFG 86 - IN:$(TZ=Asia/Calcutta date +"%l:%M %p" )'
+export RPROMPT='setFG 208 [$(uname -s)] - ;setFG 214 [$($SBIN/ip)] - ; setFG 165 - NY:$(date +"%l:%M %p") -; setFG 202 - CA:$(TZ=America/Los_Angeles date +"%l:%M %p ") -;  setFG 86 - IN:$(TZ=Asia/Calcutta date +"%l:%M %p" )'
+         __rprompt() {
+                printf "\\n\\n\\n\\n"
+                printf "%s\\n" "$(eval ${RPROMPT})"
+         }
+         export -f __rprompt
+if [[ ! $PROMPT_COMMAND =~ __rprompt ]]; then
+#--- last working PROMPT_COMMAND
+        if [[ "$(uname -s)" == "AIX" ]]; then
+            export PROMPT_COMMAND='__rprompt;  echo -e  "\033[1;97m(\033[1;96m$USER@$HOSTNAME\033[1;97m)---(\033[1;93m$PWD\033[1;97m) ";  '
+        else
+            export PROMPT_COMMAND='__rprompt;  echo -e  "\033[1;97m(\033[1;96m$USER@$(hostname)\033[1;97m)---(\033[38;5;148m$($SBIN/tinydir)\033[1;97m) "; __git_ps1  '
+        fi
+fi
+
+#export RPROMPT='$(date +'"'"'%l:%M %p '"'"' )'
+oslowname=$(echo "$osname" | tr '[:upper:]' '[:lower:]')
+export PATH=.:$SBIN:$SBIN/$oslowname:/bin:/usr/bin:/usr/sbin:/usr/local/bin:"${SOFTPATH}":$BINPATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH:$OSPATH:"${SOFT}"/PYTHONPACKAGES/bin
+export PATH=$("$SBIN"/rmDupes "$PATH")
+export CDPATH=.:..:../..:/home:/scratch/sijegana:$STOP:/scratch/sijegana/work
+export CDPATH=$(rmDupes "$CDPATH")
+## if netbeans exist set the environment for NETBEANS editor
+#–laf Nimbus -J-Dswing.aatext=true -J-Dawt.useSystemAAFontSettings=lcd
+#netbeans_default_options="-J-client -J-Xss2m -J-Xms32m -J-XX:PermSize=32m -J-Dapple.laf.useScreenMenuBar=true -J-Dapple.awt.graphics.UseQuartz=true -J-Dsun.java2d.noddraw=true -J-Dsun.java2d.dpiaware=true -J-Dsun.zip.disableMemoryMapping=true"
+
+if [[ $(uname -s) -eq "AIX" ]]; then
+    export LDR_CNTRL=TEXTPSIZE=64K@DATAPSIZE=64K@STACKPSIZE=64K@SHMPSIZE=64K
+    export MALLOCTYPE=watson
+    settitle "$(hostname -s)" > /dev/null
+else
+    settitle "$(hostname)" > /dev/null
+fi
+## set time to eastern time
+. "${SBIN}"/functions/est
+. "${FARM}"/proxy
+#[ -f /etc/bash_completion ] &&  source "/etc/bash_completion"
+#SSH_COMPLETE=( $(grep 'Host ' ~/.ssh/config | cut -f2 -d' ') )
+#complete -o default -W "${SSH_COMPLETE[*]}" ssh
+alias plugin='pushd  $CODE/oscs/PLUGINS/OSCS_GradlePlugin'
+alias client='pushd $CODE/oscs/CLIENT'
+
+colorline 201
+boxinfo
+colorline 210
+export IDEA_JDK="${JAVA_HOME}"
+#eval "$(fasd --init auto)"
+alias pydoc='python -m pydoc'
+alias checkYAML='python -c "import sys, yaml as y; y.safe_load(open(sys.argv[1]))"'
+alias checkJSON='jq "." >/dev/null <'
+export PYSPARK_DRIVER_PYTHON=$SOFT/ANACONDA/bin/jupyter
+export PYSPARK_DRIVER_PYTHON_OPTS="notebook"

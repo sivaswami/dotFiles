@@ -1,0 +1,60 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+256colors2.pl	ANSI/256colors2.pl	1;"	F	line:1
+CLUT	ANSI/hex2ansi	/^CLUT = [  # color look-up table$/;"	v	line:36
+ContentHandler	checkxml	/^from xml.sax.handler import ContentHandler$/;"	i	line:3
+__author__	ANSI/hex2ansi	/^__author__    = 'Micah Elliott http:\/\/MicahElliott.com'$/;"	v	line:27
+__copyright__	ANSI/hex2ansi	/^__copyright__ = 'Copyright (C) 2011 Micah Elliott.  All rights reserved.'$/;"	v	line:29
+__license__	ANSI/hex2ansi	/^__license__   = 'WTFPL http:\/\/sam.zoy.org\/wtfpl\/'$/;"	v	line:30
+__version__	ANSI/hex2ansi	/^__version__   = '0.1'$/;"	v	line:28
+_create_dicts	ANSI/hex2ansi	/^def _create_dicts():$/;"	f	line:313	access:public
+_str2hex	ANSI/hex2ansi	/^def _str2hex(hexstr):$/;"	f	line:304	access:public
+_strip_hash	ANSI/hex2ansi	/^def _strip_hash(rgb):$/;"	f	line:307	access:public
+ansi2html.sh	ANSI/ansi2html.sh	1;"	F	line:1
+arg	ANSI/hex2ansi	/^    arg = sys.argv[1]$/;"	v	line:378
+atos	ANSI/ansi2html.sh	/^function atos(a,i,ret) {$/;"	f	line:315
+checkxml	checkxml	1;"	F	line:1
+classpath	classpath	1;"	F	line:1
+colorcode	ANSI/colorcode	1;"	F	line:1
+colorcode2.sh	ANSI/colorcode2.sh	1;"	F	line:1
+colorcode3.sh	ANSI/colorcode3.sh	1;"	F	line:1
+colorline	ANSI/colorline	1;"	F	line:1
+colorline1	ANSI/colorline	/^function colorline1() {$/;"	f	line:12
+colortest.pl	ANSI/colortest.pl	1;"	F	line:1
+doctest	ANSI/hex2ansi	/^    import doctest$/;"	i	line:373
+dump_line	ANSI/ansi2html.sh	/^function dump_line(l,del,c,blanks,ret) {$/;"	f	line:292
+dump_screen	ANSI/ansi2html.sh	/^function dump_screen(l,ret) {$/;"	f	line:309
+encode	ANSI/ansi2html.sh	/^function encode(string,start,end,i,ret,pos,sc,buf) {$/;"	f	line:340
+fixas	ANSI/ansi2html.sh	/^function fixas(a,s,spc,i,attr,rm,ret) {$/;"	f	line:320
+fun_winscp	winscp	/^fun_winscp() { $/;"	f	line:12
+glob	checkxml	/^from glob import glob$/;"	i	line:5
+hex2ansi	ANSI/hex2ansi	1;"	F	line:1
+hex2ansi~	ANSI/hex2ansi~	1;"	F	line:1
+hex2rgb	ANSI/hex2rgb	1;"	F	line:1
+hex2rgb~	ANSI/hex2rgb~	1;"	F	line:1
+hex_to_rgb	ANSI/hex2rgb	/^def hex_to_rgb(h):$/;"	f	line:14	access:public
+hourglass	hourglass	1;"	F	line:1
+make_parser	checkxml	/^from xml.sax import make_parser$/;"	i	line:4
+parsefile	checkxml	/^def parsefile(file):$/;"	f	line:8	access:public
+path	path	1;"	F	line:1
+prettyxml	prettyxml	1;"	F	line:1
+print_all	ANSI/hex2ansi	/^def print_all():$/;"	f	line:323	access:public
+re	ANSI/hex2ansi	/^import sys, re$/;"	i	line:34
+removeAnsi	ANSI/removeAnsi	1;"	F	line:1
+rgb	ANSI/hex2ansi	/^        rgb = short2rgb(arg)$/;"	v	line:380
+rgb2short	ANSI/hex2ansi	/^def rgb2short(rgb):$/;"	f	line:334	access:public
+setAnsi	ANSI/setAnsi	1;"	F	line:1
+setBG	ANSI/setBG	1;"	F	line:1
+setFG	ANSI/setFG	1;"	F	line:1
+short2rgb	ANSI/hex2ansi	/^def short2rgb(short):$/;"	f	line:320	access:public
+sys	ANSI/hex2ansi	/^import sys, re$/;"	i	line:34
+sys	ANSI/hex2rgb	/^import sys$/;"	i	line:12
+sys	checkxml	/^import sys$/;"	i	line:6
+today	today	1;"	F	line:1
+weather	weather	1;"	F	line:1
+winscp	winscp	1;"	F	line:1
+yesterday	yesterday	1;"	F	line:1
